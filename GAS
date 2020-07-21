@@ -1,0 +1,38 @@
+var SearchString = "subject:申請";
+
+function myFunction() {
+  // var myThreads = GmailApp.search(SearchString, 0, 6);
+     var myThreads = GmailApp.search(SearchString, 0, 10);
+     //GmailApp.search(検索条件, 開始スレッドのインデックス, 最大取得数)
+  var myMsgs = GmailApp.getMessagesForThreads(myThreads);
+  
+    // 処理対象期間
+  //var SearchStartDate = new Date('2018/10/00 0:00:00');
+  //var SearchEndDate = new Date(ScriptStartTime);
+
+  for ( var threadIndex = 0 ; threadIndex < myThreads.length ; threadIndex++ ) {
+    // メールから data を抜き出す
+    var mailBody = myMsgs[threadIndex][0].getPlainBody();
+
+    // 正規表現マッチにより、メール本文から情報を抽出する。
+    var num      = mailBody.match(/社員番号:(.+)/);
+    var mail      = mailBody.match(/メールアドレス:(.+)/);
+    var name      = mailBody.match(/氏名:(.+)/);
+
+ Logger.log(num[1]);
+ Logger.log(mail[1]);
+ Logger.log(name[1]);
+ //    Logger.log(data[10]);
+
+ var sh = SpreadsheetApp.getActive().getSheetByName("test");
+ // var Sheet = SpreadsheetApp.getActiveSpreadsheet();
+ //   var ss = SpreadsheetApp.getActiveSpreadsheet();　//アクティブなスプレッドシートを取得
+ //   var sh = ss.getActiveSheet();　//アクティブなスプレッドシートのアクティブシートを取得
+   sh.insertRowsAfter(1,1);
+     //アクティブシートの〇行目の後ろに〇行追加しています
+    sh.getRange("A2").setValue(num[1]);
+    sh.getRange("B2").setValue(mail[1]);
+    sh.getRange("C2").setValue(name[1]);
+    
+  }
+}
